@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandra Yaen — Electrical Engineering</title>
+<meta name="description" content="Alexandra Yaen — Electrical Engineering student at The George Washington University. Circuits, research, rockets, and matcha.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍵</text></svg>">
+<style>
+  :root{
+    --matcha:#7ba861;
+    --matcha-deep:#4a7040;
+    --matcha-dark:#2c4526;
+    --matcha-light:#a9c98f;
+    --cream:#f7f3e8;
+    --foam:#fdfbf4;
+    --ink:#22301e;
+    --copper:#c9975b;
+    --copper-bright:#e8b877;
+    --led:#ffd76e;
+    --card:#fdfbf4;
+    --trace:#8fae76;
+    --shadow:0 4px 24px rgba(44,69,38,.10);
+    --mono:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;
+  }
+  [data-theme="dark"]{
+    --matcha:#8fbc72;
+    --matcha-deep:#a9c98f;
+    --matcha-dark:#d7e6c8;
+    --matcha-light:#4a7040;
+    --cream:#151d12;
+    --foam:#1c2618;
+    --ink:#e8efdf;
+    --copper:#e0aa66;
+    --copper-bright:#f2c88a;
+    --card:#22301c;
+    --trace:#3d5a33;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--cream);color:var(--ink);
+    line-height:1.6;overflow-x:hidden;
+    transition:background .4s,color .4s;
+  }
+  ::selection{background:var(--matcha);color:var(--foam)}
+
+  /* ---------- circuit background ---------- */
+  #circuit-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+  main{position:relative;z-index:1}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.7rem 1.4rem;
+    background:color-mix(in srgb,var(--cream) 82%,transparent);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1.5px solid var(--trace);
+  }
+  .logo{font-family:var(--mono);font-weight:700;font-size:1rem;color:var(--matcha-deep);text-decoration:none;display:flex;align-items:center;gap:.5rem}
+  .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--matcha);box-shadow:0 0 8px var(--matcha);animation:blink 2.4s infinite}
+  @keyframes blink{0%,90%{opacity:1}95%{opacity:.25}100%{opacity:1}}
+  .nav-links{display:flex;gap:.35rem;align-items:center}
+  .nav-links a{
+    font-family:var(--mono);font-size:.78rem;text-decoration:none;color:var(--ink);
+    padding:.35rem .7rem;border-radius:6px;transition:all .2s;
+  }
+  .nav-links a:hover{background:var(--matcha);color:var(--foam)}
+  /* power switch */
+  .switch{
+    cursor:pointer;border:2px solid var(--matcha-deep);border-radius:999px;
+    width:56px;height:28px;position:relative;background:var(--foam);
+    transition:background .3s;flex-shrink:0;margin-left:.5rem;
+  }
+  .switch::after{
+    content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+    background:var(--matcha-deep);transition:transform .3s cubic-bezier(.6,-0.2,.4,1.3);
+  }
+  [data-theme="dark"] .switch::after{transform:translateX(28px)}
+  .switch .sw-label{position:absolute;font-family:var(--mono);font-size:.5rem;top:50%;transform:translateY(-50%);color:var(--matcha-deep)}
+  .switch .on{right:6px}.switch .off{left:5px;display:none}
+  [data-theme="dark"] .switch .on{display:none}
+  [data-theme="dark"] .switch .off{display:block}
+
+  /* ---------- hero ---------- */
+  header{
+    min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:5.5rem 1.5rem 3rem;position:relative;
+  }
+  .chip-badge{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+    color:var(--matcha-deep);border:1.5px solid var(--matcha);border-radius:999px;
+    padding:.35rem 1rem;margin-bottom:1.4rem;background:var(--foam);
+    display:inline-flex;align-items:center;gap:.5rem;
+  }
+  .chip-badge .pulse{width:8px;height:8px;border-radius:50%;background:var(--matcha);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--matcha) 60%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  h1{
+    font-size:clamp(2.6rem,8vw,5rem);line-height:1.04;letter-spacing:-.02em;font-weight:800;
+  }
+  h1 .accent{color:var(--matcha-deep);position:relative;white-space:nowrap}
+  h1 .accent::after{
+    content:'';position:absolute;left:0;right:0;bottom:.08em;height:.18em;
+    background:var(--matcha-light);z-index:-1;border-radius:3px;
+  }
+  .tagline{
+    font-family:var(--mono);font-size:clamp(.85rem,2.4vw,1.05rem);color:var(--matcha-deep);
+    margin-top:1.1rem;min-height:1.8em;
+  }
+  .tagline .cursor{display:inline-block;width:.55em;height:1.1em;background:var(--matcha);vertical-align:text-bottom;animation:blinkc 1s step-end infinite;margin-left:2px}
+  @keyframes blinkc{50%{opacity:0}}
+  .hero-sub{max-width:34rem;margin:1.2rem auto 0;font-size:1.02rem;opacity:.85}
+  .hero-cta{display:flex;gap:.8rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+  .btn{
+    font-family:var(--mono);font-size:.85rem;text-decoration:none;padding:.7rem 1.4rem;border-radius:10px;
+    border:2px solid var(--matcha-deep);transition:all .2s;cursor:pointer;background:none;color:var(--ink);
+  }
+  .btn.primary{background:var(--matcha-deep);color:var(--cream)}
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px color-mix(in srgb,var(--matcha-deep) 45%,transparent)}
+  .btn.ghost:hover{background:var(--matcha);border-color:var(--matcha);color:var(--foam);transform:translateY(-2px)}
+  /* matcha bowl */
+  #bowl{width:130px;margin-top:2.4rem;cursor:pointer;transition:transform .15s;user-select:none}
+  #bowl:hover{transform:scale(1.06)}
+  #bowl:active{transform:scale(.95)}
+  #bowl.whisking .whisk{animation:whisk .5s ease-in-out 3}
+  #bowl.whisking .tea{animation:slosh .5s ease-in-out 3}
+  @keyframes whisk{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-9px) rotate(-9deg)}75%{transform:translateX(9px) rotate(9deg)}}
+  @keyframes slosh{0%,100%{transform:skewX(0)}25%{transform:skewX(4deg)}75%{transform:skewX(-4deg)}}
+  .whisk-count{font-family:var(--mono);font-size:.7rem;color:var(--matcha-deep);margin-top:.5rem;opacity:0;transition:opacity .3s}
+  .whisk-count.show{opacity:.85}
+  .scroll-hint{position:absolute;bottom:1.4rem;font-family:var(--mono);font-size:.68rem;color:var(--matcha-deep);animation:bob 2s infinite;letter-spacing:.12em}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  /* ---------- sections ---------- */
+  section{max-width:60rem;margin:0 auto;padding:4.5rem 1.5rem}
+  .sec-head{display:flex;align-items:center;gap:1rem;margin-bottom:2.4rem}
+  .sec-head .ref{font-family:var(--mono);font-size:.72rem;color:var(--copper);letter-spacing:.1em}
+  .sec-head h2{font-size:clamp(1.6rem,4.5vw,2.2rem);letter-spacing:-.01em;white-space:nowrap}
+  .sec-head .rail{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--trace) 0 14px,transparent 14px 22px);position:relative}
+  .sec-head .rail::after{content:'';position:absolute;right:0;top:-4px;width:10px;height:10px;border-radius:50%;border:2px solid var(--trace);background:var(--cream)}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- about ---------- */
+  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:start}
+  .about-text p{margin-bottom:1rem;font-size:1.03rem}
+  .spec-card{
+    background:var(--card);border:1.5px solid var(--trace);border-radius:14px;padding:1.3rem;box-shadow:var(--shadow);
+    font-family:var(--mono);font-size:.78rem;
+  }
+  .spec-card h3{font-size:.72rem;letter-spacing:.16em;color:var(--copper);margin-bottom:.9rem}
+  .spec-row{display:flex;justify-content:space-between;gap:1rem;padding:.42rem 0;border-bottom:1px dashed var(--trace)}
+  .spec-row:last-child{border:none}
+  .spec-row .k{opacity:.65}.spec-row .v{font-weight:700;color:var(--matcha-deep);text-align:right}
+
+  /* ---------- matcha meter ---------- */
+  .meter-wrap{margin-top:1.4rem;background:var(--card);border:1.5px solid var(--trace);border-radius:14px;padding:1.1rem 1.3rem;box-shadow:var(--shadow)}
+  .meter-wrap .label{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--copper);display:flex;justify-content:space-between;margin-bottom:.55rem}
+  .meter{height:14px;border-radius:99px;background:var(--cream);border:1.5px solid var(--trace);overflow:hidden}
+  .meter .fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--matcha-light),var(--matcha),var(--matcha-deep));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+
+  /* ---------- experience timeline ---------- */
+  .timeline{position:relative;padding-left:2.2rem}
+  .timeline::before{
+    content:'';position:absolute;left:9px;top:8px;bottom:8px;width:3px;
+    background:var(--trace);border-radius:2px;
+  }
+  .t-item{position:relative;margin-bottom:1.6rem}
+  .t-item .pad{
+    position:absolute;left:-2.2rem;top:1.15rem;width:21px;height:21px;border-radius:50%;
+    background:var(--cream);border:3px solid var(--matcha-deep);z-index:2;transition:all .25s;
+  }
+  .t-item .pad::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--matcha-deep);opacity:0;transition:opacity .25s}
+  .t-card{
+    background:var(--card);border:1.5px solid var(--trace);border-radius:14px;padding:1.15rem 1.35rem;
+    box-shadow:var(--shadow);transition:transform .25s,border-color .25s;cursor:default;
+  }
+  .t-item:hover .t-card{transform:translateX(6px);border-color:var(--matcha)}
+  .t-item:hover .pad{box-shadow:0 0 14px var(--led);border-color:var(--copper)}
+  .t-item:hover .pad::after{opacity:1}
+  .t-top{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+  .t-top h3{font-size:1.06rem}
+  .t-top .when{font-family:var(--mono);font-size:.72rem;color:var(--copper);white-space:nowrap}
+  .t-org{font-family:var(--mono);font-size:.78rem;color:var(--matcha-deep);margin:.15rem 0 .5rem}
+  .t-card ul{padding-left:1.1rem;font-size:.93rem}
+  .t-card li{margin-bottom:.3rem}
+  .t-card li::marker{color:var(--matcha)}
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;
+    border:1px solid var(--matcha);color:var(--matcha-deep);border-radius:5px;padding:.12rem .5rem;margin-left:.5rem;vertical-align:middle;
+  }
+
+  /* ---------- skills as chips ---------- */
+  .chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.1rem}
+  .chip{
+    background:var(--card);border:1.5px solid var(--trace);border-radius:12px;padding:1rem 1.1rem;
+    box-shadow:var(--shadow);position:relative;transition:transform .22s,border-color .22s;
+    font-family:var(--mono);
+  }
+  .chip::before,.chip::after{
+    content:'';position:absolute;top:14px;bottom:14px;width:7px;
+    background:repeating-linear-gradient(180deg,var(--copper) 0 5px,transparent 5px 11px);
+    opacity:.85;
+  }
+  .chip::before{left:-4px}.chip::after{right:-4px}
+  .chip:hover{transform:translateY(-4px);border-color:var(--copper)}
+  .chip .part{font-size:.6rem;letter-spacing:.14em;color:var(--copper);margin-bottom:.3rem}
+  .chip h3{font-size:.92rem;margin-bottom:.45rem;color:var(--matcha-dark)}
+  .chip p{font-size:.74rem;opacity:.8;line-height:1.55}
+
+  /* ---------- education ---------- */
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+  .edu-card{background:var(--card);border:1.5px solid var(--trace);border-radius:14px;padding:1.4rem;box-shadow:var(--shadow);transition:transform .22s,border-color .22s}
+  .edu-card:hover{transform:translateY(-4px);border-color:var(--matcha)}
+  .edu-card .where{font-family:var(--mono);font-size:.7rem;color:var(--copper);letter-spacing:.1em;margin-bottom:.4rem}
+  .edu-card h3{font-size:1.12rem;margin-bottom:.15rem}
+  .edu-card .deg{font-family:var(--mono);font-size:.78rem;color:var(--matcha-deep);margin-bottom:.7rem}
+  .edu-card ul{padding-left:1.1rem;font-size:.9rem}
+  .edu-card li{margin-bottom:.3rem}
+  .edu-card li::marker{color:var(--matcha)}
+
+  /* ---------- contact pinout ---------- */
+  .pinout{
+    background:var(--card);border:2px solid var(--trace);border-radius:18px;padding:2rem;box-shadow:var(--shadow);
+    max-width:34rem;margin:0 auto;position:relative;
+  }
+  .pinout::before{
+    content:'AY-2028 · CONTACT HEADER';position:absolute;top:-11px;left:24px;background:var(--card);
+    padding:0 .6rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;color:var(--copper);
+  }
+  .pin{
+    display:flex;align-items:center;gap:1rem;padding:.75rem .4rem;border-bottom:1px dashed var(--trace);
+    text-decoration:none;color:var(--ink);transition:background .2s;border-radius:8px;
+  }
+  .pin:last-child{border-bottom:none}
+  .pin:hover{background:color-mix(in srgb,var(--matcha) 14%,transparent)}
+  .pin .hole{
+    width:16px;height:16px;border-radius:50%;border:3px solid var(--copper);flex-shrink:0;transition:all .2s;
+  }
+  .pin:hover .hole{background:var(--led);box-shadow:0 0 10px var(--led)}
+  .pin .pname{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--copper);width:86px;flex-shrink:0}
+  .pin .pval{font-family:var(--mono);font-size:.82rem;font-weight:600;color:var(--matcha-deep);word-break:break-all}
+
+  footer{
+    text-align:center;padding:2.5rem 1.5rem 3rem;font-family:var(--mono);font-size:.7rem;color:var(--matcha-deep);opacity:.8;
+  }
+  footer .trace-end{margin-top:.6rem;opacity:.65}
+
+  /* spark on click */
+  .spark{position:fixed;pointer-events:none;z-index:99;font-size:.9rem;animation:sparkfly .7s ease-out forwards}
+  @keyframes sparkfly{to{transform:translateY(-46px) scale(.4);opacity:0}}
+
+  @media(max-width:720px){
+    .about-grid,.edu-grid{grid-template-columns:1fr}
+    .nav-links a:not(:last-child){display:none}
+    section{padding:3.2rem 1.2rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<svg id="circuit-bg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"></svg>
+
+<nav>
+  <a class="logo" href="#top"><span class="dot"></span>alexandra.yaen</a>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#experience">experience</a>
+    <a href="#skills">skills</a>
+    <a href="#education">education</a>
+    <a href="#contact">contact</a>
+    <div class="switch" id="themeSwitch" role="button" tabindex="0" aria-label="Toggle dark mode" title="lab lights">
+      <span class="sw-label on">ON</span><span class="sw-label off">LAB</span>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <!-- ============ HERO ============ -->
+  <header>
+    <div class="chip-badge"><span class="pulse"></span>OPEN TO OPPORTUNITIES · CLASS OF 2028</div>
+    <h1>Hi, I'm <span class="accent">Alexandra Yaen</span> ⚡</h1>
+    <p class="tagline"><span id="typed"></span><span class="cursor"></span></p>
+    <p class="hero-sub">Electrical engineering student at The George Washington University —
+    powered by well-routed circuits and a properly whisked cup of matcha.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#experience">see my work ↓</a>
+      <a class="btn ghost" href="mailto:alexandra.yaen@gwmail.gwu.edu">say hello</a>
+    </div>
+
+    <svg id="bowl" viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="Whisk the matcha!" title="click to whisk">
+      <g class="steam">
+        <path d="M50 22 q4 -7 0 -13" stroke="#a9c98f" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7">
+          <animate attributeName="opacity" values=".7;.15;.7" dur="2.6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M66 20 q-4 -8 0 -14" stroke="#a9c98f" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".5">
+          <animate attributeName="opacity" values=".4;.9;.4" dur="3.1s" repeatCount="indefinite"/>
+        </path>
+      </g>
+      <g class="whisk" style="transform-origin:88px 30px">
+        <rect x="85" y="6" width="6" height="26" rx="3" fill="#c9975b"/>
+        <path d="M80 30 q-3 16 2 22 M85 31 q-1 16 3 22 M91 31 q1 16 -3 22 M96 30 q3 16 -2 22" stroke="#e0c9a6" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="tea" style="transform-origin:58px 45px">
+        <ellipse cx="58" cy="44" rx="38" ry="9" fill="#7ba861"/>
+        <ellipse cx="48" cy="43" rx="10" ry="3" fill="#a9c98f" opacity=".8"/>
+      </g>
+      <path d="M20 44 q0 34 38 34 q38 0 38 -34" fill="none" stroke="#4a7040" stroke-width="5" stroke-linecap="round"/>
+      <path d="M22 46 q1 30 36 30 q35 0 36 -30 q-8 8 -36 8 q-28 0 -36 -8z" fill="#5d8a4e"/>
+      <rect x="46" y="80" width="24" height="7" rx="3" fill="#4a7040"/>
+    </svg>
+    <div class="whisk-count" id="whiskCount">cups whisked: 0</div>
+
+    <div class="scroll-hint">▼ SCROLL TO BOOT ▼</div>
+  </header>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="sec-head reveal"><span class="ref">R1</span><h2>About me</h2><div class="rail"></div></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm an electrical engineering student at GW with a soft spot for the places where
+        circuits meet the human world — from simulating wavefronts in fibrillating hearts to
+        helping a rocket's recovery system bring everything home safely.</p>
+        <p>Fun fact: PCB solder mask and ceremonial-grade matcha are basically the same color.
+        I consider this proof that I chose the right major.</p>
+        <p>When I'm not in the lab, you'll find me mentoring first-year engineering students, running
+        social media for IEEE-GWU, teaching piano with The Tacy Foundation, or perfecting my whisking technique.</p>
+        <div class="meter-wrap">
+          <div class="label"><span>MATCHA_LEVEL</span><span id="meterPct">0%</span></div>
+          <div class="meter"><div class="fill" id="meterFill"></div></div>
+        </div>
+      </div>
+      <div class="spec-card reveal">
+        <h3>// DATASHEET</h3>
+        <div class="spec-row"><span class="k">MODEL</span><span class="v">Alexandra Yaen</span></div>
+        <div class="spec-row"><span class="k">PACKAGE</span><span class="v">Washington, DC</span></div>
+        <div class="spec-row"><span class="k">CORE</span><span class="v">BS Electrical Eng.</span></div>
+        <div class="spec-row"><span class="k">CLOCK</span><span class="v">Class of 2028</span></div>
+        <div class="spec-row"><span class="k">GPA</span><span class="v">3.64</span></div>
+        <div class="spec-row"><span class="k">HONORS</span><span class="v">Presidential Scholar</span></div>
+        <div class="spec-row"><span class="k">POWER IN</span><span class="v">matcha, 2 scoops</span></div>
+        <div class="spec-row"><span class="k">OUTPUT</span><span class="v">good energy ⚡</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience">
+    <div class="sec-head reveal"><span class="ref">U2</span><h2>Experience</h2><div class="rail"></div></div>
+    <div class="timeline">
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Electrical Engineering Intern<span class="tag">CURRENT</span></h3><span class="when">MAY 2026 – PRESENT</span></div>
+          <div class="t-org">Quantum Space · Rockville, MD</div>
+          <ul><li>Supporting electrical engineering work on next-generation space systems.</li></ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Undergraduate Learning Assistant<span class="tag">CURRENT</span></h3><span class="when">JAN 2026 – PRESENT</span></div>
+          <div class="t-org">GW Academic Commons · Washington, DC</div>
+          <ul><li>Assist students taking University Physics I &amp; II in their coursework.</li></ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Undergraduate Research Assistant<span class="tag">CURRENT</span></h3><span class="when">SEP 2025 – PRESENT</span></div>
+          <div class="t-org">ADAM Lab · Washington, DC</div>
+          <ul>
+            <li>Conduct simulations identifying wavefronts in hearts experiencing ventricular fibrillation.</li>
+            <li>Contribute to research on cellular neural networks for detection and therapy of cardiac arrhythmias.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Marketing Chair<span class="tag">CURRENT</span></h3><span class="when">SEP 2025 – PRESENT</span></div>
+          <div class="t-org">IEEE – GWU · Washington, DC</div>
+          <ul><li>Developed a cohesive brand for the organization's social media, increasing student engagement by 100%.</li></ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Secretary · Risk Management Chair</h3><span class="when">AUG 2025 – PRESENT</span></div>
+          <div class="t-org">Alpha Omega Epsilon – Chi Chapter · Washington, DC</div>
+          <ul>
+            <li>Handle internal communication, note-taking, and organization for the engineering &amp; technical science sorority.</li>
+            <li>Created weekly risk management PSAs to keep members safe within and outside of sorority events.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Summer Intern</h3><span class="when">JUN 2022 – AUG 2024</span></div>
+          <div class="t-org">Deka Biosciences · Germantown, MD</div>
+          <ul>
+            <li>Set up bioreactors to observe behavior of different cell lines; cultured cells in a biosafety cabinet to sharpen aseptic technique.</li>
+            <li>Optimized anion exchange chromatography columns for the company's next-generation protein purification platform.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="t-item reveal"><span class="pad"></span>
+        <div class="t-card">
+          <div class="t-top"><h3>Junior Tennis Coach</h3><span class="when">NOV 2019 – JAN 2024</span></div>
+          <div class="t-org">Quince Orchard Swim &amp; Tennis Club · North Potomac, MD</div>
+          <ul><li>Led tennis clinics and private lessons for players ages 2–16, improving fitness and swing.</li></ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills">
+    <div class="sec-head reveal"><span class="ref">IC3</span><h2>Toolkit</h2><div class="rail"></div></div>
+    <div class="chips">
+      <div class="chip reveal"><div class="part">IC-001 · EDA</div><h3>Multisim</h3><p>Circuit simulation &amp; analysis — where the circuit obsession lives.</p></div>
+      <div class="chip reveal"><div class="part">IC-002 · CAD</div><h3>OnShape &amp; Fusion360</h3><p>3D modeling and mechanical design, from rocket parts to fixtures.</p></div>
+      <div class="chip reveal"><div class="part">IC-003 · RESEARCH</div><h3>Simulation &amp; Modeling</h3><p>Cardiac wavefront simulation and cellular neural network research at ADAM Lab.</p></div>
+      <div class="chip reveal"><div class="part">IC-004 · LAB</div><h3>Wet Lab Technique</h3><p>Bioreactors, cell culture, aseptic technique, and chromatography from Deka Biosciences.</p></div>
+      <div class="chip reveal"><div class="part">IC-005 · OFFICE</div><h3>MS Office &amp; Google Suite</h3><p>Docs, sheets, slides — the glue layer of every project.</p></div>
+      <div class="chip reveal"><div class="part">IC-006 · HUMAN</div><h3>Leadership &amp; Teaching</h3><p>Physics tutoring, first-year mentorship, club leadership, and piano instruction.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section id="education">
+    <div class="sec-head reveal"><span class="ref">J4</span><h2>Education</h2><div class="rail"></div></div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="where">WASHINGTON, DC · MAY 2028</div>
+        <h3>The George Washington University</h3>
+        <div class="deg">B.S. Electrical Engineering · GPA 3.64</div>
+        <ul>
+          <li>Presidential Scholar</li>
+          <li>GW Rocket — Recovery Team</li>
+          <li>SEASSPAN First-Year Mentor</li>
+        </ul>
+      </div>
+      <div class="edu-card reveal">
+        <div class="where">NORTH POTOMAC, MD · MAY 2024</div>
+        <h3>Quince Orchard High School</h3>
+        <div class="deg">PLTW Signature Program Certificate in Engineering</div>
+        <ul>
+          <li>President, Aerospace Engineering Club</li>
+          <li>Founder &amp; President, Book Club · President, Calligraphy Club</li>
+          <li>700 service hours</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="sec-head reveal"><span class="ref">P5</span><h2>Get in touch</h2><div class="rail"></div></div>
+    <div class="pinout reveal">
+      <a class="pin" href="mailto:alexandra.yaen@gwmail.gwu.edu">
+        <span class="hole"></span><span class="pname">PIN 1 · EMAIL</span><span class="pval">alexandra.yaen@gwmail.gwu.edu</span>
+      </a>
+      <a class="pin" href="tel:+13019437688">
+        <span class="hole"></span><span class="pname">PIN 2 · TEL</span><span class="pval">(301) 943-7688</span>
+      </a>
+      <a class="pin" href="https://www.linkedin.com/in/alexandra-yaen" target="_blank" rel="noopener">
+        <span class="hole"></span><span class="pname">PIN 3 · LINK</span><span class="pval">linkedin.com/in/alexandra-yaen</span>
+      </a>
+      <a class="pin" href="https://alexandrayaenportfolio.my.canva.site/" target="_blank" rel="noopener">
+        <span class="hole"></span><span class="pname">PIN 4 · PORT</span><span class="pval">portfolio → canva.site</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div>designed &amp; brewed by Alexandra Yaen · © 2026</div>
+    <div class="trace-end">~ 100% ceremonial-grade code · no shorts detected ~</div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  /* ---------- theme switch ---------- */
+  const sw=document.getElementById('themeSwitch');
+  const setTheme=t=>{document.documentElement.dataset.theme=t;try{localStorage.setItem('ay-theme',t)}catch(e){}};
+  try{const s=localStorage.getItem('ay-theme');if(s)setTheme(s);}catch(e){}
+  const toggle=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+  sw.addEventListener('click',toggle);
+  sw.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+
+  /* ---------- typed tagline ---------- */
+  const lines=[
+    'electrical engineering @ GW',
+    'circuit enthusiast 🔌',
+    'matcha-powered researcher 🍵',
+    'rocket recovery team member 🚀',
+    'physics learning assistant',
+  ];
+  const typed=document.getElementById('typed');
+  let li=0,ci=0,del=false;
+  (function tick(){
+    const line=lines[li];
+    typed.textContent=line.slice(0,ci);
+    let wait=del?34:70;
+    if(!del&&ci===line.length){wait=1700;del=true;}
+    else if(del&&ci===0){del=false;li=(li+1)%lines.length;wait=350;}
+    else ci+=del?-1:1;
+    setTimeout(tick,wait);
+  })();
+
+  /* ---------- circuit background ---------- */
+  const svg=document.getElementById('circuit-bg');
+  const NS='http://www.w3.org/2000/svg';
+  function buildCircuit(){
+    svg.innerHTML='';
+    const w=innerWidth,h=innerHeight;
+    svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    const g=32; // grid
+    const traces=Math.max(10,Math.floor(w/110));
+    for(let i=0;i<traces;i++){
+      let x=Math.floor(Math.random()*(w/g))*g;
+      let y=Math.floor(Math.random()*(h/g))*g;
+      let d=`M${x} ${y}`;
+      const steps=3+Math.floor(Math.random()*4);
+      for(let s=0;s<steps;s++){
+        const horiz=Math.random()>.5;
+        const len=(1+Math.floor(Math.random()*5))*g;
+        const dir=Math.random()>.5?1:-1;
+        if(horiz){x+=len*dir;}else{y+=len*dir;}
+        d+=` L${x} ${y}`;
+      }
+      const path=document.createElementNS(NS,'path');
+      path.setAttribute('d',d);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke','var(--trace)');
+      path.setAttribute('stroke-width','1.6');
+      path.setAttribute('stroke-linecap','round');
+      path.setAttribute('stroke-linejoin','round');
+      svg.appendChild(path);
+      const pad=document.createElementNS(NS,'circle');
+      pad.setAttribute('cx',x);pad.setAttribute('cy',y);pad.setAttribute('r','4');
+      pad.setAttribute('fill','var(--cream)');pad.setAttribute('stroke','var(--trace)');
+      pad.setAttribute('stroke-width','1.6');
+      svg.appendChild(pad);
+      if(i%2===0){
+        const dot=document.createElementNS(NS,'circle');
+        dot.setAttribute('r','2.6');
+        dot.setAttribute('fill','var(--copper-bright)');
+        const anim=document.createElementNS(NS,'animateMotion');
+        anim.setAttribute('dur',(5+Math.random()*7)+'s');
+        anim.setAttribute('repeatCount','indefinite');
+        anim.setAttribute('path',d);
+        dot.appendChild(anim);
+        svg.appendChild(dot);
+      }
+    }
+  }
+  buildCircuit();
+  let rto;addEventListener('resize',()=>{clearTimeout(rto);rto=setTimeout(buildCircuit,300)});
+
+  /* ---------- scroll reveal ---------- */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+  }),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---------- matcha meter ---------- */
+  const fill=document.getElementById('meterFill'),pct=document.getElementById('meterPct');
+  const mio=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting){
+      fill.style.width='87%';
+      let n=0;const iv=setInterval(()=>{n+=3;if(n>=87){n=87;clearInterval(iv);}pct.textContent=n+'%';},40);
+      mio.disconnect();
+    }
+  },{threshold:.5});
+  mio.observe(fill.parentElement);
+
+  /* ---------- whisk the bowl ---------- */
+  const bowl=document.getElementById('bowl'),wc=document.getElementById('whiskCount');
+  let cups=0;
+  bowl.addEventListener('click',()=>{
+    if(bowl.classList.contains('whisking'))return;
+    bowl.classList.add('whisking');
+    setTimeout(()=>bowl.classList.remove('whisking'),1600);
+    cups++;
+    wc.textContent=cups>=10?`cups whisked: ${cups} · certified matcha master 🏆`:`cups whisked: ${cups}`;
+    wc.classList.add('show');
+  });
+
+  /* ---------- spark on click ---------- */
+  addEventListener('click',e=>{
+    if(e.target.closest('a,button,.switch'))return;
+    const s=document.createElement('span');
+    s.className='spark';s.textContent='⚡';
+    s.style.left=(e.clientX-8)+'px';s.style.top=(e.clientY-12)+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),700);
+  });
+})();
+</script>
+</body>
+</html>
