@@ -156,12 +156,6 @@
   .spec-row:last-child{border:none}
   .spec-row .k{opacity:.65}.spec-row .v{font-weight:700;color:var(--matcha-deep);text-align:right}
 
-  /* ---------- matcha meter ---------- */
-  .meter-wrap{margin-top:1.4rem;background:var(--card);border:1.5px solid var(--trace);border-radius:14px;padding:1.1rem 1.3rem;box-shadow:var(--shadow)}
-  .meter-wrap .label{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:var(--copper);display:flex;justify-content:space-between;margin-bottom:.55rem}
-  .meter{height:14px;border-radius:99px;background:var(--cream);border:1.5px solid var(--trace);overflow:hidden}
-  .meter .fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--matcha-light),var(--matcha),var(--matcha-deep));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
-
   /* ---------- experience timeline ---------- */
   .timeline{position:relative;padding-left:2.2rem}
   .timeline::before{
@@ -333,10 +327,6 @@
         I consider this proof that I chose the right major.</p>
         <p>When I'm not in the lab, you'll find me mentoring first-year engineering students, running
         social media for IEEE-GWU, teaching piano with The Tacy Foundation, or perfecting my whisking technique.</p>
-        <div class="meter-wrap">
-          <div class="label"><span>MATCHA_LEVEL</span><span id="meterPct">0%</span></div>
-          <div class="meter"><div class="fill" id="meterFill"></div></div>
-        </div>
       </div>
       <div class="spec-card reveal">
         <h3>// DATASHEET</h3>
@@ -575,17 +565,6 @@
     if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
   }),{threshold:.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-  /* ---------- matcha meter ---------- */
-  const fill=document.getElementById('meterFill'),pct=document.getElementById('meterPct');
-  const mio=new IntersectionObserver(es=>{
-    if(es[0].isIntersecting){
-      fill.style.width='87%';
-      let n=0;const iv=setInterval(()=>{n+=3;if(n>=87){n=87;clearInterval(iv);}pct.textContent=n+'%';},40);
-      mio.disconnect();
-    }
-  },{threshold:.5});
-  mio.observe(fill.parentElement);
 
   /* ---------- whisk the bowl ---------- */
   const bowl=document.getElementById('bowl'),wc=document.getElementById('whiskCount');
