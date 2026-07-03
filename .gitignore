@@ -1,0 +1,5 @@
+# Local Netlify folder
+.netlify
+
+# Source resume PDF stays local
+*.pdf
